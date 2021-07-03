@@ -29,8 +29,8 @@
 //update/add new auther ->DONE
 
 //DELETE
-//delete a book
-//delete a author
+//delete a book ->DONE
+//delete a author from a book ->DONE
 //..........................................................................................................
 
 //3------authers-------------
@@ -47,7 +47,7 @@
 //author name using id ->task-----======--=========-
 
 //DELETE 
-//delete an author
+//delete an author -> task--------======================----------------===========================
 //.............................................................................................................
 
 //3------publications-------------
@@ -65,5 +65,5 @@
 //update/add newbook to a publication ->DONE
 
 //DELETE
-//delete a book from publication
-//delete a publication
+//delete a book from publication ->done
+//delete a publication -> task--------------===============================-----------===========

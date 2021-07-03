@@ -226,8 +226,8 @@ shapeAI.put("/book/auther/update/:isbn", (req,res) => {
         Message: "the auther was added"
     })
 });
-shapeAI.listen(3000, () => console.log("server is running"));
-//////////////////////////////do the task in requierments///////////////////////////////////////
+
+/////////////////////////////do the task in requierments///////////////////////////////////////
 ///////////////////////////////////////////////
 ///////////////////////////////////////////////
 ////////////////////////////////////////
@@ -264,3 +264,93 @@ shapeAI.put("/publication/update/book/:isbn", (req,res) => {
         message: "succesfully updatred publication"
     });
 });
+
+/*
+Route            /book/delete/
+description      delete a book
+access           public
+parameter        isbn
+method           DELETE
+*/
+shapeAI.delete("/book/delete/:isbn", (req,res) => {
+    const udatedBookDatabase =database.books.filter(
+        (book) =>  book.ISBN !== req.params.isbn
+    );
+    database.books =  udatedBookDatabase;
+    return res.json({ books: database.books});
+});
+
+/*
+Route            /book/delete/auther
+description      delete a author from a book
+access           public
+parameter        isbn,autherId
+method           DELETE
+*/
+
+shapeAI.delete("/book/delete/auther/:isbn/:autherId", (req,res) => {
+    //update the book database -> here forEach is used because wew are not modifying whole database
+    database.books.forEach((book) => {
+        if (book.ISBN === req.params.isbn) {
+            const newAutherList = book.authers.filter(
+                (auther) => auther !== parseInt(req.params.autherId)
+            );
+            book.authers = newAutherList;
+            return;
+        }
+    });
+
+    // update the auther database
+    database.authers.forEach((auther) => {
+        if (auther.id === parseInt(req.params.autherId)) {
+            const newBooksList = auther.books.filter(
+                (book) => book !== req.params.isbn
+            );
+            auther.books = newBooksList;
+            return;
+        }
+    });
+    return res.json({ 
+        message:"auther was deleted",
+        book: database.books,
+        auther: database.authers,
+        message:"auther was deleted",
+    })
+});
+
+
+/*
+Route            publication/delete/book
+description      delete a book from publication
+access           public
+parameter        isbn,pubId
+method           DELETE
+*/
+
+shapeAI.delete("/publication/delete/book/:isbn/:pubId", (req,res) => {
+    // update publication database
+    database.publications.forEach((publication) => {
+        if (publication.id === parseInt(req.params.pubId)) {
+            const newBooksList = publication.books.filter(
+                (book) => book !== req.params.isbn);
+
+                publication.books = newBooksList;
+                return;
+        }
+    });
+
+    // update book database
+    database.books.forEach((book) => {
+        if (book.ISBN === req.params.isbn) {
+            book.publication = 0;//means no publication available
+            return;
+        }
+    });
+    return res.json({ 
+        books: database.books,
+        publication: database.publications,
+        message:"deleted a book from publication"
+    })
+});
+
+shapeAI.listen(3000, () => console.log("server is running"));

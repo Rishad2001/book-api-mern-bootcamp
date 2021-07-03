@@ -1,4 +1,4 @@
-const books =[{
+let books =[{
     ISBN: "12345ONE",
     title: "Getting stated with MERN",
     authers: [1,2],
@@ -20,7 +20,7 @@ const books =[{
 }
 ];
 
-const authers =[{
+let authers =[{
     id: 1,
     name: "pavan",
     books:["12345ONE"],
@@ -32,11 +32,16 @@ const authers =[{
 },
 ]
 
-const publications = [{
+let publications = [{
     id: 1,
     name: "chakra",
     books:["12345ONE"],
 },
+{
+    id: 2,
+    name: "ckra",
+    books:[],
+}
 ];
 
 module.exports = { books, authers, publications};
