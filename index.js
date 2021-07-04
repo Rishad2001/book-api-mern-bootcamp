@@ -1,6 +1,10 @@
+//for security pupose ->needed in top before express
+require("dotenv").config();
+
 //frame work
 const express =require("express");
-
+//frame work for mongoose
+const mongoose = require("mongoose");
 //intializing
 const shapeAI =express();
 
@@ -9,6 +13,16 @@ const database = require("./database/index")
 
 //configering
 shapeAI.use(express.json());
+
+//establish database connection
+mongoose.connect(process.env.MONGO_URL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+        useCreateIndex: true,
+    }
+)
+.then(() => console.log("connection established!!!!!!!"));
 
 /*
 Route            /
