@@ -6,6 +6,6 @@ const AutherSchema = mongoose.Schema({
     books:[String],
 });
 //auther modal
-const AutherModal = mongoose.model(AutherSchema);
+const AutherModal = mongoose.model("authers",AutherSchema);
 
 module.exports = AutherModal;

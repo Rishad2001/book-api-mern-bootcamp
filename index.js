@@ -11,6 +11,11 @@ const shapeAI =express();
 //database
 const database = require("./database/index")
 
+//modals
+const BookModels = require("./database/book");
+const AutherModals = require("./database/auther");
+const PublicationModals = require("./database/publication");
+
 //configering
 shapeAI.use(express.json());
 

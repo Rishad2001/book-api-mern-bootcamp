@@ -6,6 +6,6 @@ const PublicationSchema = mongoose.Schema({
     books:[String],
 });
 //auther modal
-const PublicationModal = mongoose.model(PublicationSchema);
+const PublicationModal = mongoose.model("publications", PublicationSchema);
 
 module.exports = PublicationModal;
