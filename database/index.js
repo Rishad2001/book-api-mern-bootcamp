@@ -28,7 +28,7 @@ let authers =[{
 {
     id: 2,
     name: "deepak",
-    books:["12345ONE", "12345TWO"],
+    books:["12345ONE", "12345TWO",],
 },
 ]
 
@@ -45,4 +45,4 @@ let publications = [{
 ];
 
 module.exports = { books, authers, publications};
-//module = file
+//module = file "start": "nodemon index.js",

@@ -12,9 +12,10 @@ const shapeAI =express();
 const database = require("./database/index")
 
 //modals
-const BookModels = require("./database/book");
-const AutherModals = require("./database/auther");
-const PublicationModals = require("./database/publication");
+const BookModal = require("./database/book");
+const AutherModal = require("./database/auther");
+const PublicationModal = require("./database/publication");
+const BookModel = require("./database/book");
 
 //configering
 shapeAI.use(express.json());
@@ -36,8 +37,11 @@ access           public
 parameter        none
 method           get
 */
-shapeAI.get("/", (req,res) =>{
-    return res.json({ books: database.books})
+
+//mongoDB is asynchronus always use asyn await
+shapeAI.get("/", async (req,res) =>{
+    const getAllBooks = await BookModel.find()
+    return res.json({ getAllBooks})
 });
 
 /*
@@ -48,10 +52,11 @@ parameter        isbn
 method           get
 */
 
-shapeAI.get("/is/:isbn", (req,res)=> {
-    const getSpecificBook = database.books.filter((book) =>book.ISBN === req.params.isbn);
+shapeAI.get("/is/:isbn", async (req,res)=> {
+    const getSpecificBook = await BookModal.findOne({ISBN: req.params.isbn}) //ISBN is accorrding to schema 
+    //const getSpecificBook = database.books.filter((book) =>book.ISBN === req.params.isbn);
 
-    if (getSpecificBook.length === 0) {
+    if (!getSpecificBook) {
         return res.json({error: `no book found for the ISBN ${req.params.isbn}}`,})
     }
 
@@ -65,9 +70,10 @@ access           public
 parameter        category
 method           get
 */
-shapeAI.get("/c/:category", (req,res) => {
-    const getSpecificBooks = database.books.filter((book) => book.category.includes(req.params.category))
-    if (getSpecificBooks.length === 0) {
+shapeAI.get("/c/:category",async (req,res) => {
+    const getSpecificBooks = await BookModal.findOne({category: req.params.category})
+   // const getSpecificBooks = database.books.filter((book) => book.category.includes(req.params.category))
+    if (!getSpecificBooks) {
         return res.json({error: `no book found for the cateogery of category  name ${req.params.category}}`,})
     }
 
@@ -82,8 +88,9 @@ parameter        none
 method           get
 */
 
-shapeAI.get("/a", (req,res) => {
-    return res.json({ authers: database.authers})
+shapeAI.get("/a", async (req,res) => {
+    const getAllAuther = await AutherModal.find();
+    return res.json({ authers: getAllAuther})
 })
 
 /*
@@ -168,9 +175,10 @@ parameter        none
 method           POST
 */
 
-shapeAI.post("/book/new", (req,res) => {
+shapeAI.post("/book/new", async (req,res) => {
     const { newBook } = req.body;
-    database.books.push(newBook);
+    const addNewBook = BookModel.create(newBook)
+   // database.books.push(newBook);
     return res.json({books: database.books, Message: "book was added!"});
 });
 
@@ -184,8 +192,11 @@ method           POST
 
 shapeAI.post("/auther/new", (req,res) => {
     const { newAuther } = req.body;
-    database.authers.push(newAuther);
-    return res.json({auther: database.authers, Message: "auther was added!"});
+    
+    AutherModal.create(newAuther)
+
+    //database.authers.push(newAuther);
+    return res.json({ Message: "auther was added!"});
 });
 /*
 Route            /publication/new
@@ -197,8 +208,11 @@ method           POST
 
 shapeAI.post("/publication/new", (req,res) => {
     const { newPublication } = req.body;
-    database.publications.push(newPublication);
-    return res.json({auther: database.publications, Message: "publication was added!"});
+
+    PublicationModal.create(newPublication)
+
+    //database.publications.push(newPublication);
+    return res.json({ Message: "publication was added!"});
 });
 
 /*
