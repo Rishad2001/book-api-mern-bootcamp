@@ -368,3 +368,13 @@ shapeAI.delete("/publication/delete/book/:isbn/:pubId", (req,res) => {
 });
 
 shapeAI.listen(3000, () => console.log("server is running"));
+
+
+//talk to mongodb in which mongodb in which mongodb understands =>*******
+//talkto us in the way we understand => javascript
+
+//mongoose model
+
+//model -> document model of mongoDB
+
+//schema-> model ->use them
