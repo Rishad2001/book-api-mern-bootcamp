@@ -227,7 +227,7 @@ method           PUT
 
 shapeAI.put("/book/update/:isbn", async (req,res) =>{
 
-    const updatedBook = await BookModal.findOneAndUpdate({
+    const updateBook = await BookModal.findOneAndUpdate({
         ISBN: req.params.isbn
     },
     {
@@ -243,7 +243,7 @@ shapeAI.put("/book/update/:isbn", async (req,res) =>{
     //return;
   // }
 //}) ;
-return res.json({ books: updatedBook})
+return res.json({ books: updateBook})
 });
 
 /*
@@ -254,23 +254,45 @@ parameter        isbn
 method           PUT
 */
 
-shapeAI.put("/book/auther/update/:isbn", (req,res) => {
+shapeAI.put("/book/auther/update/:isbn", async (req,res) => {
     //update th book database
-    database.books.forEach((book) => {
-    if (book.ISBN === req.params.isbn) {
-        return book.authers.push(req.body.newAuther);
-    }
-    });
-    //update the auther database
-    database.authers.forEach((auther) => {
-        if (auther.id === req.body.newAuther){
-            return auther.books.push(req.params.isbn)
+
+    const updatedBook = await BookModal.findOneAndUpdate({
+        ISBN: req.params.isbn
+    },
+    {
+        $addToSet:{
+            authers: req.body.newAuther,
         }
-    });
-    return res.json({books: database.books,
-        authers: database.authers,
-        Message: "the auther was added"
+    },{
+        new: true,
     })
+    //database.books.forEach((book) => {
+    //if (book.ISBN === req.params.isbn) {
+    //    return book.authers.push(req.body.newAuther);
+    //}
+    //});
+    ////update the auther database
+    const updatedAuther = await AutherModal.findOneAndUpdate({
+        id: req.body.newAuther,
+    },
+    {
+        $addToSet: {
+            books: req.params.isbn
+        }
+    },
+    {
+        new: true,
+    })
+    //database.authers.forEach((auther) => {
+     //   if (auther.id === req.body.newAuther){
+     //       return auther.books.push(req.params.isbn)
+     //   }
+    //});
+    return res.json({books: updatedBook,
+        authers: updatedAuther,
+        Message: "the auther was added"
+    });
 });
 
 /////////////////////////////do the task in requierments///////////////////////////////////////

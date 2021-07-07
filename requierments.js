@@ -26,7 +26,7 @@
 
 //PUT
 //Update book details -> DONE (MONGODB)
-//update/add new auther ->DONE
+//update/add new auther ->DONE (mongoDB)
 
 //DELETE
 //delete a book ->DONE
