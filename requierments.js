@@ -21,11 +21,11 @@
 //to get a list of books based on category ->DONE ####
 //to get a list of books based on auther ->task $$$$$
 
-//PUT
+//POST
 //NEW book ->DONE
 
-//PUBLICATION
-//Update book details ->DONE
+//PUT
+//Update book details -> DONE (MONGODB)
 //update/add new auther ->DONE
 
 //DELETE
@@ -37,7 +37,7 @@
 //GET
 //we need an API
 //to get all authers ->DONE
-//to get a specific authers ->DONE $$$$
+//to get a specific authers ->DONE ****
 // to get a list of auther based on a book ->DONE  $$$$
 
 //POST

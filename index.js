@@ -1,4 +1,4 @@
-//for security pupose ->needed in top before express
+//for security pupose ->needed in top before express -> npm dotenv
 require("dotenv").config();
 
 //frame work
@@ -100,12 +100,13 @@ access           public
 parameter        auther
 method           get
 */
-shapeAI.get("/a/auther/:auther", (req,res) =>{
-    const getAuthers = database.authers.filter((auther) =>auther.name === req.params.auther)
-    if (getAuthers.length === 0){
+shapeAI.get("/a/auther/:auther", async (req,res) =>{
+    const getSpecificAuther = await AutherModal.findOne({name: req.params.auther})
+    //const getAuthers = database.authers.filter((auther) =>auther.name === req.params.auther)
+    if (!getSpecificAuther){
         return res.json({error: `auther name does not matches datbase ${req.params.auther}`})
     }
-    return res.json({auther : getAuthers})
+    return res.json({auther : getSpecificAuther})
 })
 
 /*
@@ -116,12 +117,13 @@ parameter        isbn
 method           get
 */
 
-shapeAI.get("/a/:isbn", (req,res) => {
-    const bookAuther = database.authers.filter((auther) => auther.books.includes(req.params.isbn));
-    if (bookAuther.length===0){
+shapeAI.get("/a/:isbn", async (req,res) => {
+     const getAutherBasedBook = await AutherModal.find({books: req.params.isbn})
+    //const bookAuther = database.authers.filter((auther) => auther.books.includes(req.params.isbn));
+    if (!getAutherBasedBook){
         return res.json({ error: `no auther found for the book ${req.params.isbn} `})
     }
-    return res.json({ auther: bookAuther})
+    return res.json({getAutherBasedBook})
 })
 
 /*
@@ -223,14 +225,25 @@ parameter        isbn
 method           PUT
 */
 
-shapeAI.put("/book/update/:isbn", (req,res) =>{
-database.books.forEach((book) => {
-   if ( book.ISBN === req.params.isbn) {
-    book.title = req.body.bookTitle;
-    return;
-   }
-}) ;
-return res.json({ books: database.books})
+shapeAI.put("/book/update/:isbn", async (req,res) =>{
+
+    const updatedBook = await BookModal.findOneAndUpdate({
+        ISBN: req.params.isbn
+    },
+    {
+        title: req.body.bookTitle,
+    },
+    {
+        new: true, //to get new updated data
+    }
+    )
+//database.books.forEach((book) => {
+   //if ( book.ISBN === req.params.isbn) {
+    //book.title = req.body.bookTitle;
+    //return;
+  // }
+//}) ;
+return res.json({ books: updatedBook})
 });
 
 /*
