@@ -29,7 +29,7 @@
 //update/add new auther ->DONE (mongoDB)
 
 //DELETE
-//delete a book ->DONE
+//delete a book ->DONE (mongoDB)
 //delete a author from a book ->DONE
 //..........................................................................................................
 

@@ -340,12 +340,15 @@ access           public
 parameter        isbn
 method           DELETE
 */
-shapeAI.delete("/book/delete/:isbn", (req,res) => {
-    const udatedBookDatabase =database.books.filter(
-        (book) =>  book.ISBN !== req.params.isbn
-    );
-    database.books =  udatedBookDatabase;
-    return res.json({ books: database.books});
+shapeAI.delete("/book/delete/:isbn", async (req,res) => {
+    const updatedBookDatabase = await BookModal.findOneAndDelete({
+        ISBN: req.params.isbn,
+    })
+    //const udatedBookDatabase =database.books.filter(
+    //    (book) =>  book.ISBN !== req.params.isbn
+    //);
+    //database.books =  udatedBookDatabase;
+    return res.json({ updatedBookDatabase});
 });
 
 /*
@@ -356,32 +359,54 @@ parameter        isbn,autherId
 method           DELETE
 */
 
-shapeAI.delete("/book/delete/auther/:isbn/:autherId", (req,res) => {
+shapeAI.delete("/book/delete/auther/:isbn/:autherId", async (req,res) => {
     //update the book database -> here forEach is used because wew are not modifying whole database
-    database.books.forEach((book) => {
-        if (book.ISBN === req.params.isbn) {
-            const newAutherList = book.authers.filter(
-                (auther) => auther !== parseInt(req.params.autherId)
-            );
-            book.authers = newAutherList;
-            return;
+    const updatedBook = await BookModal.findOneAndUpdate({
+        ISBN: req.params.isbn,
+    },
+    {
+        $pull: {
+            authers: parseInt(req.params.autherId)
         }
-    });
+    },
+    {
+        new: true,
+    })
+    //database.books.forEach((book) => {
+    //    if (book.ISBN === req.params.isbn) {
+    //        const newAutherList = book.authers.filter(
+    //            (auther) => auther !== parseInt(req.params.autherId)
+    //        );
+     //       book.authers = newAutherList;
+     //       return;
+    //    }
+    //});
 
     // update the auther database
-    database.authers.forEach((auther) => {
-        if (auther.id === parseInt(req.params.autherId)) {
-            const newBooksList = auther.books.filter(
-                (book) => book !== req.params.isbn
-            );
-            auther.books = newBooksList;
-            return;
+    const updatedAuther = await AutherModal.findOneAndUpdate({
+        id: parseInt(req.params.autherId),
+    },
+    {
+        $pull: {
+            books: req.params.isbn
         }
-    });
+    },
+    {
+        new: "true",
+    })
+    //database.authers.forEach((auther) => {
+     //   if (auther.id === parseInt(req.params.autherId)) {
+     //       const newBooksList = auther.books.filter(
+      //          (book) => book !== req.params.isbn
+     //       );
+    //        auther.books = newBooksList;
+     //       return;
+     //   }
+    //});
     return res.json({ 
         message:"auther was deleted",
-        book: database.books,
-        auther: database.authers,
+        book: updatedBook,
+        auther: updatedAuther,
         message:"auther was deleted",
     })
 });
