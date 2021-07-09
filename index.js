@@ -80,6 +80,24 @@ shapeAI.get("/c/:category",async (req,res) => {
     return res.json({books: getSpecificBooks})
 })
 
+
+/*
+Route            /books/auther
+description      to get a list of books based on auther
+access           public
+parameter        id
+method           get
+*/
+
+shapeAI.get("/books/auther/:id",async (req,res) => {
+    const getBooksBasedAuther = await BookModal.find({authers: req.params.id})
+    //const getBooksBasedAuther = database.books.filter((books) => books.id === based)
+    if (!getBooksBasedAuther) {
+        return res.json({error: `no list of books based on this auther${req.params.id}`,})
+    }
+    return res.json({getBooksBasedAuther })  
+});
+
 /*
 Route            /a
 description      to get all authers
@@ -119,7 +137,7 @@ method           get
 
 shapeAI.get("/a/:isbn", async (req,res) => {
      const getAutherBasedBook = await AutherModal.find({books: req.params.isbn})
-    //const bookAuther = database.authers.filter((auther) => auther.books.includes(req.params.isbn));
+    //const bookAuther = database.authers.filter((auther) => auther.books.includes(req.params.isbn)); 
     if (!getAutherBasedBook){
         return res.json({ error: `no auther found for the book ${req.params.isbn} `})
     }
@@ -134,23 +152,25 @@ parameter        none
 method           get
 */
 
-shapeAI.get("/p", (req,res) => {
-    return res.json({publications: database.publications})
+shapeAI.get("/p", async (req,res) => {
+    const getPUblication = await PublicationModal.find();
+    return res.json({getPUblication})
 })
 
 /*
 Route            /p/publications
-description      to get all publication
+description      to get specific publicatio n
 access           public
 parameter        name
 method           get
 */
-shapeAI.get("/p/publications/:name", (req,res) => {
-    const getPublication =database.publications.filter((publication) => publication.name === req.params.name)
-    if (getPublication.length === 0) {
-        return res.json({ error: `publication with name ${req.params.name} `})
+shapeAI.get("/p/publications/:name", async (req,res) => {
+    const getSpecificPublication = await PublicationModal.find({name: req.params.name})
+    //const getPublication =database.publications.filter((publication) => publication.name === req.params.name)
+    if (!getSpecificPublication) {
+        return res.json({error: `no book found for the ISBN ${req.params.name}}`,});
     }
-    return res.json({ publication: getPublication})
+    return res.json({getSpecificPublication})
 })
 
 /*
@@ -161,12 +181,13 @@ parameter        book
 method           get
 */
 
-shapeAI.get("/p/:name", (req,res) => {
-    const bookPublication =database.publications.filter((publication) => publication.books.includes(req.params.name));
-    if (bookPublication.length === 0) {
+shapeAI.get("/p/:name", async(req,res) => {
+    const bookPublication = await PublicationModal.find({books: req.params.name})
+    //const bookPublication =database.publications.filter((publication) => publication.books.includes(req.params.name));
+    if (!bookPublication) {
         return res.json({error: `no publication found for the book ${req.params.name}`});
     }
-    return res.json({ book: bookPublication})
+    return res.json({bookPublication})
 })
 
 /*
@@ -277,9 +298,9 @@ shapeAI.put("/book/auther/update/:isbn", async (req,res) => {
         id: req.body.newAuther,
     },
     {
-        $addToSet: {
+       
             books: req.params.isbn
-        }
+        
     },
     {
         new: true,
@@ -311,24 +332,43 @@ parameter        isbn
 method           PUT
 */
 
-shapeAI.put("/publication/update/book/:isbn", (req,res) => {
-    //update the publication data base
-    database.publications.forEach((publication) => {
-        if (publication.id === req.body.pubId) {
-            return database.publications.books.push(req.params.isbn);
-        }
-    }); 
+shapeAI.put("/publication/update/book/:isbn", async(req,res) => {
 
     //update the book database
-    database.books.forEach((book) => {
+    const updatedBook = await BookModal.findOneAndUpdate({
+        ISBN: req.params.isbn,
+    },
+    {
+        publication: req.body.newPublication
+    },
+    {
+        new: true,
+    }) 
+    /*database.books.forEach((book) => {
         if (book.ISBN === req.params.isbn){
             book.publication = req.body.pubId;
             return;
         }
-    });
+    });*/
+
+    //update the publication data base
+    const updatedPublication = await PublicationModal.findOneAndUpdate({
+        id: req.body.newPublication,
+    },
+    {
+        ISBN: req.params.isbn,
+    },
+    {
+        new: true,
+    })
+    /*database.publications.forEach((publication) => {
+        if (publication.id === req.body.pubId) {
+            return database.publications.books.push(req.params.isbn);
+        }
+    });*/ 
     return res.json({ 
-        books: database.books, 
-        publications: database.publications,
+        books: updatedBook, 
+        publications:  updatedPublication,
         message: "succesfully updatred publication"
     });
 });

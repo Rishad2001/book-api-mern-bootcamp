@@ -19,8 +19,7 @@
 //to get all books ->DONE #####
 //to get specific book  ->DONE ####
 //to get a list of books based on category ->DONE ####
-//to get a list of books based on auther ->task $$$$$
-
+//to get a list of books based on auther ->DONE (mongoDB) 
 //POST
 //NEW book ->DONE
 
@@ -30,21 +29,21 @@
 
 //DELETE
 //delete a book ->DONE (mongoDB)
-//delete a author from a book ->DONE
+//delete a author from a book ->DONE (mongoDB)
 //..........................................................................................................
 
 //3------authers-------------
 //GET
 //we need an API
-//to get all authers ->DONE
-//to get a specific authers ->DONE ****
-// to get a list of auther based on a book ->DONE  $$$$
+//to get all authers ->DONE (mongoDB)
+//to get a specific authers ->DONE (mongoDB)
+// to get a list of auther based on a book ->DONE  (mongoDB)
 
 //POST
 //new author  ->DONE
 
 //PUT 
-//author name using id ->task-----======--=========-
+//author name using id -> DONE (mongoDB)
 
 //DELETE 
 //delete an author -> task--------======================----------------===========================
@@ -53,8 +52,8 @@
 //3------publications-------------
 //GET
 //we need an API
-//to get all publications ->DONE $$$$
-//to get a specific publications ->DONE $$$$
+//to get all publications ->DONE (mongoDB)
+//to get a specific publications ->(mongoDB)
 // to get a list of publications based on a book ->DONE $$$$
 
 //POST 
